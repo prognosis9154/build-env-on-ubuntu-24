@@ -13,10 +13,10 @@ if [ ! -f /etc/os-release ]; then
 fi
 source /etc/os-release
 case ${UBUNTU_CODENAME} in
-bionic | focal | jammy | noble)
+noble)
     ;;
 *)
-    echo "WARNING: This script only works on Ubuntu bionic/focal/jammy/noble"
+    echo "WARNING: This script only works on Ubuntu noble"
     exit 1
 esac
 
@@ -50,7 +50,7 @@ apt-get -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnu
 
 # python
 case "${UBUNTU_CODENAME}" in
-focal|jammy|noble)
+noble)
     apt-get -y install python3 python-is-python3 python3-pyelftools
 	;;
 *)
@@ -63,9 +63,6 @@ esac
 apt-get -y install expect expect-dev mtools \
     autoconf autotools-dev libsigsegv2 m4 intltool curl sed binutils libglib2.0-dev \
     libglade2-dev
-if [ ${UBUNTU_CODENAME} = "bionic" ]; then
-    apt-get -y install libqt4-dev python-linaro-image-tools linaro-image-tools
-fi
 apt-get -y install kmod cpio rsync zip patchelf live-build gettext zstd
 
 # crosstool-ng
@@ -82,30 +79,10 @@ apt-get -y install pigz p7zip-full
 # for sd_fuse
 apt-get -y install parted udev fdisk e2fsprogs
 
-# simg2img
-case "${UBUNTU_CODENAME}" in
-focal|jammy|noble)
-        apt-get -y install android-libbase android-liblog android-libsparse android-sdk-libsparse-utils btrfs-progs
-        ;;
-*)
-        apt-get -y install android-tools-fsutils
-        ;;
-esac
-
-case "${UBUNTU_CODENAME}" in
-jammy|noble)
-	apt-get -y install exfatprogs exfat-fuse
-	;;
-*)
-	apt-get -y install exfat-fuse exfat-utils
-	;;
-esac
+apt-get -y install exfatprogs exfat-fuse
 
 # for wireguard
 apt-get -y install libmnl-dev
-
-# for android
-apt-get -y install openjdk-8-jdk
 
 # for openwrt23
 apt-get -y install gcc-multilib
@@ -113,15 +90,12 @@ apt-get -y install gcc-multilib
 # for openwrt24 (uboot)
 apt-get -y install python3-dev python3-setuptools
 
-# for android 14+ (kernel-6.1)
-apt install dwarves lz4
-
 # install friendlyelec-toolchain
-[ -d fa-toolchain ] || git clone https://github.com/friendlyarm/prebuilts.git -b master --depth 1 fa-toolchain
-(cat fa-toolchain/gcc-x64/toolchain-4.9.3-armhf.tar.gz* | tar xz -C /)
-(cat fa-toolchain/gcc-x64/toolchain-6.4-aarch64.tar.gz* | tar xz -C /)
-(tar xf fa-toolchain/gcc-x64/toolchain-11.3-aarch64.tar.xz -C /)
+#[ -d fa-toolchain ] || git clone https://github.com/friendlyarm/prebuilts.git -b master --depth 1 fa-toolchain
+#(cat fa-toolchain/gcc-x64/toolchain-4.9.3-armhf.tar.gz* | tar xz -C /)
+#(cat fa-toolchain/gcc-x64/toolchain-6.4-aarch64.tar.gz* | tar xz -C /)
+#(tar xf fa-toolchain/gcc-x64/toolchain-11.3-aarch64.tar.xz -C /)
 
-rm -rf fa-toolchain
+#rm -rf fa-toolchain
 
 echo "all done."
